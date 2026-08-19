@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Um site especial dedicado ao Matheus.">
+  <title>Especial para o Matheus 🌟</title>
+
+  <style>
+    :root {
+      --bg: #071a3d;
+      --bg-deep: #030b20;
+      --card: rgba(248, 250, 255, 0.94);
+      --text: #263044;
+      --wine: #8b2d45;
+      --accent: #6fa8ff;
+      --border: #a9c8ff;
+      --soft: #e8f1ff;
+      --glow-color: rgba(111, 168, 255, 0.6);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      background:
+        radial-gradient(circle at 15% 20%, rgba(65, 139, 255, .30) 0%, transparent 25%),
+        radial-gradient(circle at 85% 15%, rgba(130, 95, 255, .24) 0%, transparent 24%),
+        radial-gradient(circle at 50% 85%, rgba(36, 183, 255, .18) 0%, transparent 30%),
+        linear-gradient(135deg, var(--bg) 0%, #0b2c63 48%, var(--bg-deep) 100%);
+      color: var(--text);
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Canvas para Estrelas em HD */
+    #starCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Luzes e Efeitos de Brilho */
+    .light-glow,
+    .stars,
+    .cursor-light,
+    .floating-food-container {
+      position: fixed;
+      pointer-events: none;
+    }
+
+    .light-glow {
+      inset: 50% auto auto 50%;
+      width: 650px;
+      height: 650px;
+      transform: translate(-50%, -50%);
+      background: radial-gradient(circle, rgba(124, 190, 255, .4) 0%, rgba(38, 96, 205, 0) 70%);
+      filter: blur(20px);
+      z-index: 0;
+      animation: pulseGlow 6s infinite alternate ease-in-out;
+    }
+
+    @keyframes pulseGlow {
+      0% { transform: translate(-50%, -50%) scale(0.9); opacity: 0.6; }
+      100% { transform: translate(-50%, -50%) scale(1.15); opacity: 1; }
+    }
+
+    .stars {
+      inset: 0;
+      z-index: 0;
+      background-image:
+        radial-gradient(3px 3px at 25px 35px, rgba(255,255,255,.95), transparent 70%),
+        radial-gradient(2px 2px at 80px 140px, rgba(133,198,255,.95), transparent 70%),
+        radial-gradient(3px 3px at 160px 70px, rgba(255,224,145,.9), transparent 70%),
+        radial-gradient(1.5px 1.5px at 210px 190px, rgba(255,255,255,.9), transparent 70%),
+        radial-gradient(2px 2px at 130px 240px, rgba(120,170,255,.9), transparent 70%),
+        radial-gradient(4px 4px at 45px 220px, rgba(255,255,255,.75), transparent 65%);
+      background-repeat: repeat;
+      background-size: 280px 280px;
+      opacity: .8;
+      animation: twinkle 2.5s infinite alternate ease-in-out;
+    }
+
+    @keyframes twinkle {
+      from {
+        opacity: .45;
+        filter: brightness(.9);
+      }
+      to {
+        opacity: 1;
+        filter: brightness(1.5) drop-shadow(0 0 6px rgba(170, 215, 255, .8));
+      }
+    }
+
+    .cursor-light {
+      width: 280px;
+      height: 280px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(160, 215, 255, .35) 0%, rgba(110, 160, 255, .12) 35%, rgba(255,255,255,0) 72%);
+      transform: translate(-50%, -50%);
+      z-index: 1;
+      transition: transform 0.05s linear;
+    }
+
+    .blue-glow {
+      position: fixed;
+      width: 450px;
+      height: 450px;
+      right: -130px;
+      bottom: -130px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(74, 143, 255, .35) 0%, rgba(74, 143, 255, 0) 70%);
+      filter: blur(15px);
+      pointer-events: none;
+      z-index: 0;
+      animation: glowFloat 7s ease-in-out infinite alternate;
+    }
+
+    @keyframes glowFloat {
+      from { transform: translate(-20px, 10px) scale(.95); opacity: .65; }
+      to { transform: translate(20px, -30px) scale(1.12); opacity: 1; }
+    }
+
+    /* Comidas Flutuantes */
+    .floating-food-container {
+      inset: 0;
+      overflow: hidden;
+      z-index: 1;
+    }
+
+    .food-item {
+      position: absolute;
+      bottom: -50px;
+      font-size: clamp(1.5rem, 3vw, 2.3rem);
+      user-select: none;
+      opacity: 0.75;
+      filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.4));
+      animation: floatUp var(--duration) linear infinite;
+      animation-delay: var(--delay);
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) rotate(0deg) scale(0.8);
+        opacity: 0;
+      }
+      10% {
+        opacity: 0.8;
+      }
+      90% {
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(-110vh) rotate(360deg) scale(1.1);
+        opacity: 0;
+      }
+    }
+
+    /* Conteúdo do Site */
+    .container {
+      position: relative;
+      z-index: 2;
+      width: min(680px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 40px 0;
+    }
+
+    /* Cards com Bordas Brilhantes */
+    .card {
+      display: block;
+      background: var(--card);
+      border: 2px solid var(--border);
+      border-radius: 20px;
+      padding: 35px;
+      margin-bottom: 30px;
+      box-shadow:
+        0 0 20px rgba(111, 168, 255, 0.4),
+        0 0 40px rgba(130, 95, 255, 0.25),
+        inset 0 0 15px rgba(255, 255, 255, 0.6);
+      animation: fadeIn .7s ease-out both, borderGlow 4s ease-in-out infinite alternate;
+      backdrop-filter: blur(8px);
+    }
+
+    /* Animação de Brilho Pulsante nas Bordas */
+    @keyframes borderGlow {
+      0% {
+        border-color: #825fff;
+        box-shadow:
+          0 0 15px rgba(130, 95, 255, 0.5),
+          0 0 30px rgba(111, 168, 255, 0.3),
+          inset 0 0 12px rgba(255, 255, 255, 0.7);
+      }
+      100% {
+        border-color: #6fa8ff;
+        box-shadow:
+          0 0 25px rgba(111, 168, 255, 0.8),
+          0 0 50px rgba(130, 95, 255, 0.5),
+          inset 0 0 20px rgba(255, 255, 255, 0.9);
+      }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Palavras de Destaque Sem Fundo, Apenas Cor e Negrito */
+    .highlight {
+      font-weight: 800;
+      color: #d97706; /* Cor dourada marcante */
+      text-shadow: 0 0 8px rgba(217, 119, 6, 0.3);
+      display: inline;
+      transition: color 0.2s ease, text-shadow 0.2s ease;
+    }
+
+    .highlight:hover {
+      color: #b45309;
+      text-shadow: 0 0 12px rgba(180, 83, 9, 0.5);
+    }
+
+    .auth-box {
+      text-align: center;
+      margin-top: max(30px, 12vh);
+    }
+
+    .food-header {
+      text-align: center;
+      font-size: 2.4rem;
+      margin-bottom: 12px;
+    }
+
+    .auth-box h2,
+    .section-title {
+      color: var(--wine);
+      text-shadow: 0 0 14px rgba(111, 168, 255, .3);
+    }
+
+    .auth-box h2 {
+      margin-bottom: 15px;
+      font-size: 1.8rem;
+    }
+
+    .auth-box p {
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+    }
+
+    input[type="text"] {
+      width: min(100%, 260px);
+      padding: 12px 18px;
+      border: 2px solid var(--accent);
+      border-radius: 25px;
+      font-size: 1rem;
+      outline: none;
+      color: var(--text);
+      text-align: center;
+      background: white;
+      box-shadow: 0 0 10px rgba(111, 168, 255, 0.3);
+    }
+
+    input[type="text"]:focus {
+      border-color: var(--wine);
+      box-shadow: 0 0 15px rgba(188, 71, 73, .5);
+    }
+
+    button {
+      padding: 12px 22px;
+      border: none;
+      border-radius: 25px;
+      background: linear-gradient(135deg, #4f8cff, #6f63ff);
+      color: white;
+      box-shadow: 0 0 15px rgba(73, 122, 255, .5);
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: .2s ease;
+    }
+
+    button:hover {
+      background: linear-gradient(135deg, #2f6fd9, #6a54dc);
+      transform: translateY(-2px);
+      box-shadow: 0 0 22px rgba(90, 130, 255, .8);
+    }
+
+    .btn-hint {
+      background: transparent;
+      color: var(--wine);
+      border: 1.5px dashed var(--wine);
+      padding: 10px 16px;
+      font-size: .9rem;
+    }
+
+    .btn-hint:hover {
+      background: #fde8e8;
+    }
+
+    .error-msg {
+      display: none;
+      color: #d90429;
+      margin-top: 10px;
+      font-size: .95rem;
+    }
+
+    .hint-box {
+      display: none;
+      margin-top: 15px;
+      padding: 12px;
+      background: var(--soft);
+      border-left: 4px solid var(--accent);
+      border-radius: 12px;
+      color: #6b705c;
+      text-align: left;
+      line-height: 1.5;
+    }
+
+    .site-content {
+      display: none;
+    }
+
+    .section-title {
+      font-size: clamp(1.45rem, 4vw, 2rem);
+      margin-bottom: 18px;
+      padding-bottom: 9px;
+      border-bottom: 2px dashed var(--border);
+    }
+
+    .img-container {
+      text-align: center;
+      margin: 20px 0;
+    }
+
+    .img-container img {
+      display: block;
+      width: 100%;
+      max-width: 520px;
+      max-height: 420px;
+      margin: 0 auto;
+      object-fit: cover;
+      border-radius: 15px;
+      border: 3px solid var(--border);
+      box-shadow: 0 0 20px rgba(111, 168, 255, 0.4);
+    }
+
+    .text-body {
+      line-height: 1.8;
+      font-size: 1.05rem;
+      text-align: justify;
+      color: var(--text);
+    }
+
+    .verse-box {
+      margin-top: 18px;
+      padding: 20px;
+      background: var(--soft);
+      border-left: 5px solid var(--accent);
+      border-radius: 10px;
+      font-style: italic;
+      line-height: 1.7;
+      box-shadow: 0 0 15px rgba(111, 168, 255, 0.3);
+    }
+
+    .center-text {
+      text-align: center;
+    }
+
+    @media (max-width: 600px) {
+      .blue-glow {
+        width: 320px;
+        height: 320px;
+      }
+
+      .container {
+        width: min(100% - 20px, 680px);
+        padding: 20px 0;
+      }
+
+      .card {
+        padding: 24px 18px;
+        border-radius: 16px;
+      }
+
+      .input-group {
+        flex-direction: column;
+      }
+
+      .input-group input,
+      .input-group button {
+        width: 100%;
+      }
+
+      .text-body {
+        text-align: left;
+      }
+
+      .cursor-light {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Canvas para estrelas animadas -->
+  <canvas id="starCanvas"></canvas>
+
+  <!-- Luzes de Fundo -->
+  <div class="light-glow" aria-hidden="true"></div>
+  <div class="blue-glow" aria-hidden="true"></div>
+  <div class="stars" aria-hidden="true"></div>
+  <div class="cursor-light" id="cursorLight" aria-hidden="true"></div>
+
+  <!-- Container de Comidas Flutuantes -->
+  <div class="floating-food-container" id="foodContainer" aria-hidden="true"></div>
+
+  <main class="container">
+
+    <!-- TELA DE SENHA -->
+    <section id="authScreen" class="card auth-box">
+      <div class="food-header">🥩 🍕 🍔</div>
+      <h2>Acesso Reservado</h2>
+      <p>Digite a <span class="highlight">palavra-chave secreta</span> para entrar no seu site:</p>
+
+      <div class="input-group">
+        <input
+          type="text"
+          id="passwordInput"
+          placeholder="Sua senha aqui..."
+          autocomplete="off"
+          aria-label="Palavra-chave"
+        >
+        <button type="button" id="enterButton">Entrar</button>
+        <button type="button" class="btn-hint" id="hintButton">Quer uma dica?</button>
+      </div>
+
+      <p id="errorMsg" class="error-msg">Palavra-chave incorreta! Tente novamente.</p>
+      <div id="hintBox" class="hint-box">
+        💡 <strong>Dica:</strong> É uma das comidas favoritas de domingo, feita na grelha ou no espeto!
+      </div>
+    </section>
+
+    <!-- CONTEÚDO DO SITE -->
+    <div id="siteContent" class="site-content">
+
+      <section class="card">
+        <div class="food-header">✨ 🍖 🍰 ✨</div>
+        <h1 class="section-title">Parabéns, Matheus! Você conseguiu entrar no site!</h1>
+        <div class="img-container">
+          <img src="Gojito.jpg" alt="Gojito">
+        </div>
+        <p class="text-body">
+          Esse site foi especialmente feito para você. A criadora quis demonstrar o quão sua <span class="highlight">amizade é importante</span> para ela.
+          Não sei se você gosta de textinhos, mas se prepare para ler tudo com <span class="highlight">muita atenção</span>, ok?
+        </p>
+      </section>
+
+      <section class="card">
+        <h2 class="section-title">💧 Pausa para hidratação</h2>
+        <div class="img-container">
+          <img src="Agua.jpg" alt="Água">
+        </div>
+        <p class="text-body center-text">
+          Não se esqueça de beber um <span class="highlight">gole de água</span> antes de continuar lendo!
+        </p>
+      </section>
+
+      <section class="card">
+        <h2 class="section-title">Comportamento</h2>
+        <div class="img-container">
+          <img src="Nanamitadori.jpg" alt="Nanamitadori">
+        </div>
+        <p class="text-body">
+          Matheus, sério, eu não esperava chegar até aqui onde estamos com essa <span class="highlight">amizade</span>. Sério, eu pensei que fosse algo que ia ser passageiro.
+          Claro que eu sei que não converso muito com você, pois eu nunca fui acostumada a lidar com o <span class="highlight">afeto</span> que você me proporciona.
+          Sabe, eu nunca fui priorizada desde meu 7º ano do fundamental 2, sempre era trocada e era a segunda opção de todos.
+          Acabava sendo deixada de lado sempre. Eu disputava por atenção dessas "amizades", eu até mentia ou dava tudo de mim para poder me encaixar,
+          mas infelizmente não era para ser.
+          <br><br>
+          O tempo foi se passando e eu acabei me acostumando com minha própria companhia, o que é bom, mas ao mesmo tempo é ruim e extremamente perigoso.
+          Sabe por quê? Porque eu estava fazendo a mesma coisa que fizeram comigo, ou seja, um efeito rebote.
+          E eu já senti isso na pele, então por que eu vou fazer isso com as pessoas que <span class="highlight">se importam comigo</span>?
+          É difícil ser presente, mas sabe o que seria mais difícil? <span class="highlight">Perder sua amizade</span>.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2 class="section-title">Sua presença na minha vida</h2>
+        <div class="img-container">
+          <img src="Sukunafeliz.jpg" alt="Sukuna Feliz">
+        </div>
+        <p class="text-body">
+          Olha, eu não vou mentir, pensei que nossa amizade seria uma coisa bem passageira, pois tu sabe que mesmo em época digital os laços ficam cada vez mais fracos.
+          Mas sua amizade me mostrou que a gente não precisa estar perto um do outro para ter uma <span class="highlight">conexão de verdade</span>.
+          Claro que temos opiniões diferentes e condições diferentes, mas isso não nos impossibilitou de criar um laço.
+          <br><br>
+          Eu quero agradecer por <span class="highlight">todo o apoio</span> que você me forneceu, por sua presença, seu carisma e por ser uma pessoa maravilhosa que me lembra de estar <span class="highlight">perto de Deus</span>.
+          Que eu possa ter maturidade para lidar com nossas conversas e pedir a Deus que continue nos fortalecendo, tanto nEle quanto em nós.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2 class="section-title">Vida com Deus</h2>
+        <div class="img-container">
+          <img src="Yujibible.jpg" alt="Yuji com Bíblia">
+        </div>
+        <p class="text-body">
+          Espero também que você continue na sua <span class="highlight">perseverança no Senhor</span>. Sabe que desde que os últimos tempos entraram muitas coisas têm acontecido:
+          terremotos, distrações, fenômenos naturais e muitas tragédias. E sabe que isso não é normal, <span class="highlight">Jesus está voltando</span>.
+          <br><br>
+          Continue fazendo seu devocional, <span class="highlight">lendo a Bíblia</span>, orando e jejuando. Você é <span class="highlight">escolhido por Deus</span>, e se você tiver dificuldades para voltar para Ele,
+          converse com alguém instruído na fé, procure ajuda, mas <span class="highlight">não se afaste de Deus</span>. Quero te ver no céu e que você seja salvo.
+          Continue sendo esse grande homem em Jesus Cristo. E agora não é o momento para se desviar; não digo isso para te causar medo, mas sim para despertar.
+        </p>
+      </section>
+
+      <section class="card">
+        <h2 class="section-title">Considerações finais</h2>
+        <div class="img-container">
+          <img src="Thorfin.jpg" alt="Thorfinn">
+        </div>
+        <p class="text-body">
+          Por fim, eu deixo um versículo para você, para podermos encerrar este site:
+        </p>
+
+        <div class="verse-box">
+          “Ele respondeu: ‘Porque a fé que vocês têm é pequena. Eu afirmo que a pura verdade é esta:
+          se vocês tiverem <span class="highlight">fé do tamanho de uma semente de mostarda</span>, poderão dizer a este monte:
+          «Vá daqui para lá», e ele irá. <span class="highlight">Nada será impossível para vocês.</span>’”
+          <br><br>
+          <strong>— Mateus 17:20</strong>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <script>
+    // Lógica da Senha e Dica
+    const passwordInput = document.getElementById("passwordInput");
+    const enterButton = document.getElementById("enterButton");
+    const hintButton = document.getElementById("hintButton");
+    const authScreen = document.getElementById("authScreen");
+    const siteContent = document.getElementById("siteContent");
+    const errorMsg = document.getElementById("errorMsg");
+    const hintBox = document.getElementById("hintBox");
+    const cursorLight = document.getElementById("cursorLight");
+
+    function checkPassword() {
+      const password = passwordInput.value.trim().toLowerCase();
+
+      if (password === "churrasco") {
+        authScreen.style.display = "none";
+        siteContent.style.display = "block";
+        errorMsg.style.display = "none";
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      } else {
+        errorMsg.style.display = "block";
+        passwordInput.focus();
+      }
+    }
+
+    function toggleHint() {
+      const isVisible = hintBox.style.display === "block";
+      hintBox.style.display = isVisible ? "none" : "block";
+    }
+
+    enterButton.addEventListener("click", checkPassword);
+    hintButton.addEventListener("click", toggleHint);
+
+    passwordInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") {
+        checkPassword();
+      }
+    });
+
+    passwordInput.addEventListener("input", () => {
+      errorMsg.style.display = "none";
+    });
+
+    // Luz seguindo o cursor do mouse
+    if (window.matchMedia("(pointer: fine)").matches) {
+      document.addEventListener("mousemove", (event) => {
+        cursorLight.style.left = event.clientX + "px";
+        cursorLight.style.top = event.clientY + "px";
+      });
+    }
+
+    // Gerador de Comidas Flutuantes
+    const foodEmojis = ["🥩", "🍕", "🍔", "🍰", "🍿", "🍣", "🍦", "🍩", "🌮", "🍟", "🍫", "🧁"];
+    const foodContainer = document.getElementById("foodContainer");
+
+    function createFloatingFoods() {
+      const count = 22; // Quantidade de alimentos na tela
+      for (let i = 0; i < count; i++) {
+        const food = document.createElement("div");
+        food.className = "food-item";
+        food.textContent = foodEmojis[Math.floor(Math.random() * foodEmojis.length)];
+        
+        const leftPos = Math.random() * 96; // Posição horizontal %
+        const duration = 10 + Math.random() * 15; // Duração da subida
+        const delay = Math.random() * 15; // Atraso no início
+
+        food.style.left = leftPos + "%";
+        food.style.setProperty("--duration", duration + "s");
+        food.style.setProperty("--delay", delay + "s");
+
+        foodContainer.appendChild(food);
+      }
+    }
+    createFloatingFoods();
+
+    // Estrelinhas Brilhantes com Canvas
+    const canvas = document.getElementById('starCanvas');
+    const ctx = canvas.getContext('2d');
+    let starsArray = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    class Star {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 0.5;
+        this.alpha = Math.random();
+        this.speed = Math.random() * 0.02 + 0.005;
+        this.increasing = Math.random() > 0.5;
+      }
+
+      update() {
+        if (this.increasing) {
+          this.alpha += this.speed;
+          if (this.alpha >= 1) this.increasing = false;
+        } else {
+          this.alpha -= this.speed;
+          if (this.alpha <= 0.2) this.increasing = true;
+        }
+      }
+
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = this.alpha;
+        ctx.fillStyle = '#ffffff';
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = '#8bc3ff';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      }
+    }
+
+    function initStars() {
+      resizeCanvas();
+      starsArray = [];
+      const numberOfStars = Math.floor((canvas.width * canvas.height) / 3000);
+      for (let i = 0; i < numberOfStars; i++) {
+        starsArray.push(new Star());
+      }
+    }
+
+    function animateStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      starsArray.forEach(star => {
+        star.update();
+        star.draw();
+      });
+      requestAnimationFrame(animateStars);
+    }
+
+    window.addEventListener('resize', initStars);
+    initStars();
+    animateStars();
+  </script>
+</body>
+</html>
